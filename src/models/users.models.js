@@ -12,61 +12,60 @@
 //     updatedAt Date
 //   }
 
-import mongoose ,{Schema} from "mongoose";
+import mongoose, { Schema } from "mongoose";
 
-const userSchema = new Schema({
-    username:{
-        type:String,
-        required:true,
-        unique:true,
-        lowercase:true,
-        trim:true,
-        index:true
-    },
-
-    email:{
-        type:String,
-        required:true,
-        unique:true,
+const userSchema = new Schema(
+  {
+    username: {
+      type: String,
+      required: true,
+      unique: true,
+      lowercase: true,
+      trim: true,
+      index: true,
     },
 
-    fullName:{
-        type:String,
-        required:true,
-        unique:true,
-        lowercase:true,
-        trim:true,
-        index:true
+    email: {
+      type: String,
+      required: true,
+      unique: true,
     },
 
-    avatar:{
-        type:String,
-        required:true,
+    fullName: {
+      type: String,
+      required: true,
+      unique: true,
+      lowercase: true,
+      trim: true,
+      index: true,
     },
-    coverImage:{
-        type:String,
-        required:true,
+
+    avatar: {
+      type: String,
+      required: true,
     },
-    watchHistory:[
-        {
-            type: Schema.Types.ObjectId,
-            ref: "Videos"
-        }
+    coverImage: {
+      type: String,
+      required: true,
+    },
+    watchHistory: [
+      {
+        type: Schema.Types.ObjectId,
+        ref: "Videos",
+      },
     ],
-    password:{
-        type:String,
-        required:[true , "Password is required"]
+    password: {
+      type: String,
+      required: [true, "Password is required"],
     },
 
-    refreshToken:{
-        type:String
-    }
+    refreshToken: {
+      type: String,
+    },
+  },
+  {
+    timestamps: true,
+  }
+);
 
-
-
-
-},{
-    timestamps:true
-})
-
-export const Users = mongoose.model("Users",userSchema)
+export const Users = mongoose.model("Users", userSchema);

@@ -8,11 +8,30 @@
 //     updatedAt Date
 //   }
 
+import mongoose, { Schema } from "mongoose";
 
-import mongoose,{Schema} from "mongoose";
+const PlayListSchema = Schema(
+  {
+    name: {
+      type: String,
+      required: true,
+    },
+    description: {
+      type: String,
+      required: true,
+    },
+    owner: {
+      type: mongoose.Types.ObjectId,
+      ref: "Users",
+    },
+    videos: {
+      type: mongoose.Types.ObjectId,
+      ref: "Videos",
+    },
+  },
+  {
+    timestamps: true,
+  }
+);
 
-const PlayListSchema = Schema({
-
-})
-
-export const Playlist = mongoose.model("Playlist",PlayListSchema)
+export const Playlist = mongoose.model("Playlist", PlayListSchema);
