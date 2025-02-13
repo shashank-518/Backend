@@ -90,4 +90,10 @@ userSchema.methods.generateAccessToken = function(){
     }, process.env.ACCESS_TOKEN_KEY , {expiresIn: process.env.ACCESS_EXPIRES_IN} )
 }
 
+userSchema.methods.generateRefreshToken = function(){
+    jwt.sign({
+        _id:this._id,
+    }, process.env.REFRESH_TOKEN_KEY , {expiresIn: process.env.REFRESH_EXPIRES_IN} )
+}
+
 export const Users = mongoose.model("Users", userSchema);
