@@ -12,8 +12,26 @@
 
 import mongoose,{Schema} from "mongoose";
 
-const CommentSchema = Schema({
+const CommentSchema = new  Schema(
+    {
 
-})
+    content:{
+        type:String,
+        required:true
+    },
+    video:{
+        type:mongoose.Types.ObjectId,
+        ref:"Videos"
+    },
+    owner:{
+        type:mongoose.Types.ObjectId,
+        ref:"Users"
+    },
+},
+{
+  timest  
+}
+
+)
 
 export const Comments = mongoose.model("Comments",CommentSchema)

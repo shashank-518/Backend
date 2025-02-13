@@ -10,7 +10,7 @@
 
 import mongoose, { Schema } from "mongoose";
 
-const PlayListSchema = Schema(
+const PlayListSchema = new  Schema(
   {
     name: {
       type: String,
