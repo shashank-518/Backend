@@ -2,6 +2,7 @@ import { ApiError } from "../utils/ApiError";
 import asyncHandler from "../utils/asyncHandler";
 import { Users } from "../models/users.models";
 import { uploadOnCloudinary } from "../utils/cloudinary";
+import { ApiResponse } from "../utils/ApiResponse";
 
 const RegisterUser = asyncHandler(async(req,res)=>{
     const {fullname,username,password,email} = req.body;
@@ -37,6 +38,14 @@ const RegisterUser = asyncHandler(async(req,res)=>{
         avatar:avatarImage.url,
         coverImage:coverImage?.url || ""
     })
+
+    const createdUser = await Users.findById(user._id).select("-password","-refreshToken")
+
+    if(!createdUser){
+        throw new ApiError(500 , "There is some Error from Your Side")
+    }
+
+    return res.status(200).json(new ApiResponse(200 , createdUser , "User Created Successfully"))
 
 
 
