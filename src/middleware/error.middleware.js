@@ -11,6 +11,8 @@ const errorHandler = (err,req,res,next)=>{
 
         const message = error.message || "Something Went Worng"
 
+        error = new ApiError(statusCode ,message,error?.errors || [], err.stack)
+
     }
 
 }
