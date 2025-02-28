@@ -34,10 +34,20 @@ const RegisterUser = asyncHandler(async(req,res)=>{
 
     let avatar;
     try {
-        
+       avatar =  await uploadOnCloudinary(avatarlocalpath)
+       console.log("Avatar uploaded successfully:", avatar);
     } catch (error) {
         console.log("Error has been Occurred" , error)
         throw new ApiError(500 , "Failed to load avatar")
+    }
+
+    let coverImage;
+    try {
+    coverImage =  await uploadOnCloudinary(coverlocalpath)
+       console.log("cover Image uploaded successfully:", coverImage);
+    } catch (error) {
+        console.log("Error has been Occurred" , error)
+        throw new ApiError(500 , "Failed to load Cover Image")
     }
 
     const user = await Users.create({
