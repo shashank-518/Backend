@@ -17,18 +17,27 @@ const RegisterUser = asyncHandler(async(req,res)=>{
         throw new ApiError(409, "User Already Exists")
     }
 
-    const avatarlocalpath = req.files?.avatar[0]?.path
-    const coverlocalpath = req.files?.coverImage[0]?.path
+    const avatarlocalpath = req.files?.avatar?.[0]?.path
+    const coverlocalpath = req.files?.coverImage?.[0]?.path
 
-    if(!avatarlocalpath){
-        throw new ApiError(400 , "Avatar file is missing")
-    }
+    // if(!avatarlocalpath){
+    //     throw new ApiError(400 , "Avatar file is missing")
+    // }
 
-    const avatarImage = uploadOnCloudinary(avatarlocalpath)
+    // const avatarImage = uploadOnCloudinary(avatarlocalpath)
 
-    let coverImage = ""
-    if(coverlocalpath){
-        coverImage = uploadOnCloudinary(coverlocalpath) 
+    // let coverImage = ""
+    // if(coverlocalpath){
+    //     coverImage = uploadOnCloudinary(coverlocalpath) 
+    // }
+
+
+    let avatar;
+    try {
+        
+    } catch (error) {
+        console.log("Error has been Occurred" , error)
+        throw new ApiError(500 , "Failed to load avatar")
     }
 
     const user = await Users.create({
