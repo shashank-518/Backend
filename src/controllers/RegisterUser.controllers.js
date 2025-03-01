@@ -130,6 +130,18 @@ const LoginUser = asyncHandler(async(req,res)=>{
         throw new ApiError(500 , "Invalid credentials")
     }
 
+
+    const {refreshToken , AccessToken} = generateRefreshAndAccessToken(User._id);
+
+    const loggedInUser = await User.findById(User._id).select("-password -refreshToken")
+
+    if(!loggedInUser){
+        throw new ApiError(500 , "There is some problem Trying to log you in");
+
+    }
+
+    
+
 })
 
 
