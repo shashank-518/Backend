@@ -54,8 +54,9 @@ const RegisterUser = asyncHandler(async(req,res)=>{
         fullName,
         username,
         password,
-        avatar:avatarImage.url,
-        coverImage:coverImage?.url || ""
+        email,
+        avatar:avatar.url || "" ,
+        coverImage:coverImage.url || ""
     })
 
     const createdUser = await Users.findById(user._id).select("-password","-refreshToken")
