@@ -5,17 +5,25 @@ import { deletefromClouldinary, uploadOnCloudinary } from "../utils/cloudinary.j
 import { ApiResponse } from "../utils/ApiResponse.js";
 
 const generateRefreshAndAccessToken = async(userId)=>{
-    const user = await Users.findById(userId)
+   try {
+     const user = await Users.findById(userId)
+ 
+     if(!user){
+         console.log("There is no user by this User Id");
+         throw new ApiError(500 , "Register a user with this name");
+     }
+ 
+     const RefreshToken = user.generateRefreshToken()
+     const AccessToken = user.generateAccessToken()
+ 
+     user.refreshToken = RefreshToken
+     await user.save({validateBeforeSave:false})
+     return {RefreshToken , AccessToken}
+   } catch (error) {
 
-    if(!user){
-        console.log("There is no user by this User Id");
-        throw new ApiError(500 , "Register a user with this name");
-    }
-
-    const RefreshToken = user.generateRefreshToken()
-    const AccessToken = user.generateAccessToken()
-
-    user.refreshToken = RefreshToken
+    throw new ApiError(500,"There was an error trying to generate new access and refresh token")
+    
+   }
 
 }
 
