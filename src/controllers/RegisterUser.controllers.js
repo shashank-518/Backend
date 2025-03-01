@@ -4,6 +4,21 @@ import { Users } from "../models/users.models.js";
 import { deletefromClouldinary, uploadOnCloudinary } from "../utils/cloudinary.js";
 import { ApiResponse } from "../utils/ApiResponse.js";
 
+const generateRefreshAndAccessToken = async(userId)=>{
+    const user = await Users.findById(userId)
+
+    if(!user){
+        console.log("There is no user by this User Id");
+        throw new ApiError(500 , "Register a user with this name");
+    }
+
+    const RefreshToken = user.generateRefreshToken()
+    const AccessToken = user.generateAccessToken()
+
+    user.refreshToken = RefreshToken
+
+}
+
 const RegisterUser = asyncHandler(async(req,res)=>{
     const {fullName,username,password,email} = req.body;
 
@@ -85,6 +100,8 @@ const RegisterUser = asyncHandler(async(req,res)=>{
 
 
 })
+
+
 
 export {
     RegisterUser
