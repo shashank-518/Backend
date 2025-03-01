@@ -1,7 +1,7 @@
 import { ApiError } from "../utils/ApiError.js";
 import asyncHandler from "../utils/asyncHandler.js";
 import { Users } from "../models/users.models.js";
-import { uploadOnCloudinary } from "../utils/cloudinary.js";
+import { deletefromClouldinary, uploadOnCloudinary } from "../utils/cloudinary.js";
 import { ApiResponse } from "../utils/ApiResponse.js";
 
 const RegisterUser = asyncHandler(async(req,res)=>{
@@ -50,22 +50,36 @@ const RegisterUser = asyncHandler(async(req,res)=>{
         throw new ApiError(500 , "Failed to load Cover Image")
     }
 
-    const user = await Users.create({
-        fullName,
-        username,
-        password,
-        email,
-        avatar:avatar.url || "" ,
-        coverImage:coverImage.url || ""
-    })
+    try {
+        const user = await Users.create({
+            fullName,
+            username,
+            password,
+            email,
+            avatar:avatar.url || "" ,
+            coverImage:coverImage.url || ""
+        })
+    
+        const createdUser = await Users.findById(user._id).select({ password: 0, refreshToken: 0 })
+    
+        if(!createdUser){
+            throw new ApiError(500 , "There is some Error from Your Side")
+        }
+    
+        return res.status(200).json(new ApiResponse(200 , createdUser , "User Created Successfully"))
+    } catch (error) {
+        console.log("Something went wrong while registering an user");
 
-    const createdUser = await Users.findById(user._id).select({ password: 0, refreshToken: 0 })
+        if(avatar){
+            await deletefromClouldinary(avatar.public_id)
+        }
+        if(coverImage){
+            await deletefromClouldinary(coverImage.public_id)
+        }
 
-    if(!createdUser){
-        throw new ApiError(500 , "There is some Error from Your Side")
+        throw new ApiError(500 , "There is some Error from Your Side and images were deleted")
+        
     }
-
-    return res.status(200).json(new ApiResponse(200 , createdUser , "User Created Successfully"))
 
 
 
