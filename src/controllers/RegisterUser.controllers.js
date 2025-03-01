@@ -59,7 +59,7 @@ const RegisterUser = asyncHandler(async(req,res)=>{
         coverImage:coverImage.url || ""
     })
 
-    const createdUser = await Users.findById(user._id).select("-password","-refreshToken")
+    const createdUser = await Users.findById(user._id).select({ password: 0, refreshToken: 0 })
 
     if(!createdUser){
         throw new ApiError(500 , "There is some Error from Your Side")
