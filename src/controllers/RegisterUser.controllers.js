@@ -110,6 +110,29 @@ const RegisterUser = asyncHandler(async(req,res)=>{
 })
 
 
+const LoginUser = asyncHandler(async(req,res)=>{
+
+    const {email,username,password} = req.body;
+
+    if(!email){
+        throw new ApiError(500,"Email is required")
+    }
+
+    const User = await Users.findOne({$or:[{username},{email}]})
+
+    if(!User){
+        throw new ApiError(500 , "No User Found")
+    }
+
+    const isPasswordValid = await User.isPasswordCorrect(password)
+
+    if(!isPasswordValid){
+        throw new ApiError(500 , "Invalid credentials")
+    }
+
+})
+
+
 
 export {
     RegisterUser
