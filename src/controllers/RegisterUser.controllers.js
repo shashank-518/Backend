@@ -243,10 +243,29 @@ const refreshToken = asyncHandler(async(req,res)=>{
 
 const changeCurrentPassword = asyncHandler (async(req,res)=>{
 
+  const {oldPassword, newPassword} = req.body;
+
+  const user = await Users.findById(req.user?._id)
+
+  const isPasswordCorrect = user.isPasswordCorrect(oldPassword)
+
+  if(!isPasswordCorrect){
+    throw new ApiError(404 , "Old Password is Incorrect" )
+  }
+
+  user.password = newPassword;
+
+  user.save({validateBeforeSave:false})
+
+  return res
+  .status(200)
+  .json(new ApiResponse(200 , {} , "Password Changed Successfully"))
 })
 
 const getCurrentUser = asyncHandler (async(req,res)=>{
-  
+  return res
+  .status(200)
+  .json(new ApiResponse(200 , req.user , "Current User Deatils"))
 })
 
 const updateUserDetails = asyncHandler (async(req,res)=>{
