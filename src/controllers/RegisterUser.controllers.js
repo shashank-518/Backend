@@ -269,14 +269,77 @@ const getCurrentUser = asyncHandler (async(req,res)=>{
 })
 
 const updateUserDetails = asyncHandler (async(req,res)=>{
-  
+
+  const {fullname , email} = req.body;
+
+  const user = await Users.findByIdAndUpdate(req.user?._id , {
+    $set:{
+      fullname,
+      email
+    }
+  },
+  {new:true}
+
+  ).select("-password refreshToken")
+
+
+  return res
+  .status(200)
+  .json(new ApiResponse(200 , user , "User Details Updated"))
+
 })
 
 const updateUserAvatar = asyncHandler (async(req,res)=>{
+
+  const avatarLocalPath = req.file.path;
+
+  if(!avatarLocalPath){
+    throw new ApiError(404 , "File Path is required")
+  }
+
+  const avatarcloud = await uploadOnCloudinary(avatarLocalPath)
+
+  if(!avatarcloud.url){
+   throw  new ApiError(404 , "There was a error in uploading")
+  }
+
+  const user = await Users.findByIdAndUpdate(req.user?.id , {
+    $set:{
+      avatar : avatarcloud.url
+    }
+  }, {new : true}).select("-password refreshToken")
+
+  return res
+  .status(200)
+  .json(new ApiResponse(200 , user , "ChangedAvatarCloud"))
   
 })
 
 const updateUserCoverImage = asyncHandler (async(req,res)=>{
+
+  const coverImage = req.file?.path
+
+  if(!coverImage){
+    throw new ApiError(404 , "Cover Image is required")
+  }
+
+  const cloudcover = await uploadOnCloudinary(coverImage)
+
+  if(cloudcover.url){
+    throw new ApiError(404 , "Error Ocuured") 
+  }
+
+  const user = await Users.findByIdAndUpdate(req.user?._id , {
+    $set:{
+      coverImage : cloudcover.url
+    }
+  },
+  {new:true}
+).select("-password refreshToken")
+
+  return res
+  .status(200)
+  .json(new ApiResponse(200 , user , "changed in Updating User Cover Image"))
   
 })
 
