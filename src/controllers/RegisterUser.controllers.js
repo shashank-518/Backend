@@ -123,18 +123,21 @@ const RegisterUser = asyncHandler(async (req, res) => {
 
 const LoginUser = asyncHandler(async (req, res) => {
 
-    const {username,password,Email} = req.body;
+    const {userName,password,email} = req.body;
  
 
 
-  console.log(req.body);
+  // console.log(password);
   
-  if (!Email?.trim()) {
+  if (!email?.trim()) {
 
     throw new ApiError(500, "Email is required");
   }
 
-  const User = await Users.findOne({ $or: [{ username }, { email }] });
+  const User = await Users.findOne({ $or: [{ userName }, { email }] });
+
+  // console.log(User);
+  
 
   if (!User) {
     throw new ApiError(500, "No User Found");
@@ -142,13 +145,18 @@ const LoginUser = asyncHandler(async (req, res) => {
 
   const isPasswordValid = await User.isPasswordCorrect(password);
 
+  // console.log(isPasswordValid);
+  
+
+
+
   if (!isPasswordValid) {
     throw new ApiError(500, "Invalid credentials");
   }
 
   const { refreshToken, AccessToken } = generateRefreshAndAccessToken(User._id);
 
-  const loggedInUser = await User.findById(User._id).select(
+  const loggedInUser = await Users.findById(User._id).select(
     "-password -refreshToken"
   );
 
