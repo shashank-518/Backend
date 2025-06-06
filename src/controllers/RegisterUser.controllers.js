@@ -34,6 +34,8 @@ const generateRefreshAndAccessToken = async (userId) => {
 
 const RegisterUser = asyncHandler(async (req, res) => {
   const { fullName, username, password, email } = req.body;
+  console.log(fullName);
+  
 
   if (
     [fullName, username, password, email].some((field) => field?.trim() === "")
@@ -120,13 +122,15 @@ const RegisterUser = asyncHandler(async (req, res) => {
 });
 
 const LoginUser = asyncHandler(async (req, res) => {
-  const { email, username, password } = req.body;
+
+    const {username,password,Email} = req.body;
+ 
+
 
   console.log(req.body);
   
-  
+  if (!Email?.trim()) {
 
-  if (!email) {
     throw new ApiError(500, "Email is required");
   }
 
