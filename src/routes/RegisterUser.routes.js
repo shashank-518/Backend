@@ -1,6 +1,6 @@
 import { Router } from "express";
 
-import { RegisterUser , LogoutUser } from "../controllers/RegisterUser.controllers.js";
+import { RegisterUser , LogoutUser, LoginUser } from "../controllers/RegisterUser.controllers.js";
 import { uploads } from "../middleware/multer.middleware.js";
 
 import { authmiddleware } from "../middleware/auth.middleware.js";
@@ -14,6 +14,8 @@ router
     {name:"coverImage", maxCount:1}
 ]), 
     RegisterUser);
+
+router.route("/login").post(LoginUser)
 
 router.route('/logout').post(authmiddleware , LogoutUser);
 

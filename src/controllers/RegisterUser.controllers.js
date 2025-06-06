@@ -102,6 +102,7 @@ const RegisterUser = asyncHandler(async (req, res) => {
       .status(200)
       .json(new ApiResponse(200, createdUser, "User Created Successfully"));
   } catch (error) {
+    console.log(error);
     console.log("Something went wrong while registering an user");
 
     if (avatar) {
@@ -120,6 +121,10 @@ const RegisterUser = asyncHandler(async (req, res) => {
 
 const LoginUser = asyncHandler(async (req, res) => {
   const { email, username, password } = req.body;
+
+  console.log(req.body);
+  
+  
 
   if (!email) {
     throw new ApiError(500, "Email is required");
@@ -472,7 +477,7 @@ const getUserWatchHistory = asyncHandler(async(req,res)=>{
 
   return res
   .status(200)
-  .json(new ApiResponse(200 , user , "Successfully"))
+  .json(new ApiResponse(200 , user[0]?.watchHistory , "Successfully"))
 
 })
 
