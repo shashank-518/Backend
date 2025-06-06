@@ -28,7 +28,7 @@ export const  authmiddleware = asyncHandler( async (req,res,next)=>{
         
     } catch (error) {
 
-        throw new ApiError(401 , error?.message || "Invalid Access Token")
+        throw new ApiError(401 , error?.message || "Access Denied")
         
     }
 
