@@ -7,6 +7,7 @@ import {
 } from "../utils/cloudinary.js";
 import { ApiResponse } from "../utils/ApiResponse.js";
 import jwt from "jsonwebtoken";
+import { Mongoose } from "mongoose";
 
 const generateRefreshAndAccessToken = async (userId) => {
   try {
@@ -418,6 +419,60 @@ const getUserChannelProfile = asyncHandler(async(req,res)=>{
 
 
 
+
+})
+
+const getUserWatchHistory = asyncHandler(async(req,res)=>{
+  const user = await Users.aggregate([
+      {
+        $match:{
+          _id: new Mongoose.Types.ObjectId(req.user._id)
+        }
+      },
+      {
+        $lookup:{
+          from:"videos",
+          localField:"watchHistory",
+          foreignField:"_id",
+          as:"userWatchHistory",
+          pipeline:[
+            {
+              $lookup:{
+                from:"Users",
+                localField:"owner",
+                foreignField:"_id",
+                as:"Owner",
+                pipeline:[
+                  {
+                    $project:{
+                      fullname:1,
+                      userName:1,
+                      avatar:1
+                    }
+                  }
+                ]
+              }
+            },
+            {
+              $addFields:{
+                owner:{
+                  $first:"$owner"
+                }
+              }
+            }
+          ]
+        }
+      }
+  ])
+
+
+  if(!user.length){
+    throw new ApiError(404, "User watch history not found")
+  }
+
+  return res
+  .status(200)
+  .json(new ApiResponse(200 , user , "Successfully"))
 
 })
 
